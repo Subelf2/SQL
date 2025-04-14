@@ -40,13 +40,39 @@ canvas.pack()
 # Drawing a rectangle with a darker outline (doubled dimensions)
 canvas.create_rectangle(40, 40, 1200, 500, outline="#7B3F00", width=40)
 
+# Function to display book details in the same window
+def show_book_details(book):
+    # Hide the main canvas
+    canvas.pack_forget()
+
+    # Create a new frame for the book details
+    details_frame = tk.Frame(window, bg="light gray")
+    details_frame.pack(fill="both", expand=True)
+
+    # Display book details
+    tk.Label(details_frame, text="Book Details", font=("Arial", 16, "bold"), bg="light gray").pack(pady=10)
+    tk.Label(details_frame, text=f"Title: {book[1]}", font=("Arial", 12), bg="light gray").pack(pady=5)
+    tk.Label(details_frame, text=f"Author: {book[2]}", font=("Arial", 12), bg="light gray").pack(pady=5)
+    tk.Label(details_frame, text=f"Style ID: {book[3]}", font=("Arial", 12), bg="light gray").pack(pady=5)
+    tk.Label(details_frame, text=f"Year of Publication: {book[4]}", font=("Arial", 12), bg="light gray").pack(pady=5)
+
+    # Add a "Back" button to return to the main canvas
+    def go_back():
+        details_frame.pack_forget()  # Hide the details frame
+        canvas.pack(fill="both", expand=True)  # Show the main canvas
+
+    tk.Button(details_frame, text="Back", command=go_back, font=("Arial", 12), bg="#7B3F00", fg="white").pack(pady=20)
+
 # Drawing small rectangles for each book inside the main rectangle (doubled dimensions)
 num_books = len(books)
 if num_books > 0:
 
     # Updated colors for the small rectangles using HEX codes
     colors = ["#008000", "#4682B4", "#600000", "#000070", "#003300", "#40E0D0"]  # Green, Steel Blue, Dark Red, Dark Blue, Dark Green, Turquoise
-    
+    random.shuffle(colors)  # Shuffle colors for randomness
+    book_sizes_multipliers = [1, 1.1, 1.2, 1.3, 1.4]  # Multipliers for book sizes
+    random.shuffle(book_sizes_multipliers)  # Shuffle multipliers for randomness
+
     for i in range(num_books):
         color = colors[i % len(colors)]  # Cycle through colors
         x1 = 60 + (i * 100) + (i * 2)  # Adjust x-coordinate for padding (doubled)
@@ -56,14 +82,15 @@ if num_books > 0:
 
         # Ensure the rectangles fit within the main rectangle
         if x2 <= 1200 and y2 <= 500:
-            canvas.create_rectangle(
-                x1,  # Generate a floating-point number
-                y1 * (random.randint(100, 135) / 100),  # Generate a floating-point number
+            rect = canvas.create_rectangle(
+                x1,
+                y1 * book_sizes_multipliers[random.randint(0, len(book_sizes_multipliers) - 1)],
                 x2,
                 y2,
                 outline="black",
                 fill=color
             )
+
             # Add book title as text inside the rectangle (vertically)
             book_title = books[i][1]  # Assuming the title is in the second column of the database
 
@@ -89,6 +116,9 @@ if num_books > 0:
                 angle=90,  # Rotate text vertically
                 font=("Arial", 20)  # Doubled font size
             )
+
+            # Bind a click event to the rectangle to show book details
+            canvas.tag_bind(rect, "<Button-1>", lambda event, book=books[i]: show_book_details(book))
 
 # Main function, so the UI starts and interacts with the user.
 window.mainloop()
