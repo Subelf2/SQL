@@ -14,7 +14,7 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-sql = "SELECT * FROM Books"
+sql = "SELECT Book_id, Title, Author, G.name, year_of_publication FROM Books JOIN genres G ON books.Style_id = G.style_id"
 
 params = []
 
@@ -50,18 +50,18 @@ def show_book_details(book):
     details_frame.pack(fill="both", expand=True)
 
     # Display book details
-    tk.Label(details_frame, text="Book Details", font=("Arial", 16, "bold"), bg="light gray").pack(pady=10)
-    tk.Label(details_frame, text=f"Title: {book[1]}", font=("Arial", 12), bg="light gray").pack(pady=5)
-    tk.Label(details_frame, text=f"Author: {book[2]}", font=("Arial", 12), bg="light gray").pack(pady=5)
-    tk.Label(details_frame, text=f"Style ID: {book[3]}", font=("Arial", 12), bg="light gray").pack(pady=5)
-    tk.Label(details_frame, text=f"Year of Publication: {book[4]}", font=("Arial", 12), bg="light gray").pack(pady=5)
+    tk.Label(details_frame, text=f"{book[1]}", font=("Arial", 34, "bold"), bg="light gray").pack(pady=60)
+    tk.Label(details_frame, text=f"This book was written by {book[2]} \nand published in {book[4]}. It belongs to the genre {book[3]}.", font=("Arial", 24), bg="light gray").pack(pady=5)
+    #tk.Label(details_frame, text=f"Author: {book[2]}", font=("Arial", 12), bg="light gray").pack(pady=5)
+    #tk.Label(details_frame, text=f"Style ID: {book[3]}", font=("Arial", 12), bg="light gray").pack(pady=5)
+    #tk.Label(details_frame, text=f"Year of Publication: {book[4]}", font=("Arial", 12), bg="light gray").pack(pady=5)
 
     # Add a "Back" button to return to the main canvas
     def go_back():
         details_frame.pack_forget()  # Hide the details frame
         canvas.pack(fill="both", expand=True)  # Show the main canvas
 
-    tk.Button(details_frame, text="Back", command=go_back, font=("Arial", 12), bg="#7B3F00", fg="white").pack(pady=20)
+    tk.Button(details_frame, text="Back To Library", command=go_back, font=("Arial", 20), bg="#7B3F00", fg="white").pack(pady=30)
 
 # Drawing small rectangles for each book inside the main rectangle (doubled dimensions)
 num_books = len(books)
