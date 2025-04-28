@@ -15,16 +15,8 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-sql_books = "SELECT Book_id, Title, Author, G.name, year_of_publication FROM Books JOIN genres G ON books.Style_id = G.style_id"
+
 sql_genres = "SELECT * FROM genres"
-params = []
-
-mycursor.execute(sql_books)
-
-res = mycursor.fetchall()
-for x in res:
-    books.append(x)
-
 mycursor.execute(sql_genres)
 myresult = mycursor.fetchall()
 for x in myresult:
@@ -41,11 +33,13 @@ def add_book_to_db(title, author, genre, year):
     mydb.commit()
     print(mycursor.rowcount, "record inserted.")
 
+
 # GUI creation
 
 # Window creation
 window = tk.Tk()
-window.title("Dark Brown Rectangle")
+window.title("Library Simulator")
+window.configure(bg="light gray")  # Set the background color of the window
 
 # Adjust the window size
 window.geometry("1400x700")
@@ -123,6 +117,7 @@ def show_add_book_frame():
         # Go back to the library
         add_book_frame.pack_forget()
         canvas.pack(fill="both", expand=True)
+        redraw_books()  # Redraw the books to include the new one
 
     # Add an error label to display validation messages
     error_label = tk.Label(add_book_frame, text="", font=("Arial", 12), fg="red", bg="light gray")
@@ -139,6 +134,15 @@ def show_add_book_frame():
 
 # Function to redraw all books on the canvas
 def redraw_books():
+    sql_books = "SELECT Book_id, Title, Author, G.name, year_of_publication FROM Books JOIN genres G ON books.Style_id = G.style_id"
+    # Clear the previous books list
+    books.clear()
+    mycursor.execute(sql_books)
+
+    res = mycursor.fetchall()
+    for x in res:
+        books.append(x)
+    
     canvas.delete("all")  # Clear the canvas
     # Redraw the main rectangle
     canvas.create_rectangle(40, 40, 1360, 660, outline="#7B3F00", width=40)
