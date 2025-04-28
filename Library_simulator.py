@@ -39,7 +39,6 @@ def add_book_to_db(title, author, genre, year):
 # Window creation
 window = tk.Tk()
 window.title("Library Simulator")
-window.configure(bg="light gray")  # Set the background color of the window
 
 # Adjust the window size
 window.geometry("1400x700")
@@ -57,6 +56,8 @@ book_to_rectangle = {}  # Dictionary to map books to their rectangles
 book_to_title = {}  # Dictionary to map books to their title text
 
 colors = ["#008000", "#4682B4", "#600000", "#000070", "#003300", "#40E0D0"]  # Colors for rectangles
+#shuffle the colors to randomize their order
+random.shuffle(colors)
 
 # Function to display the "Add Book" frame
 def show_add_book_frame():
