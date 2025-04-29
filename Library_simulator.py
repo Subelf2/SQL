@@ -226,6 +226,11 @@ def show_book_details(book):
         def confirm_removal():
             # Remove the book from the list
             books.remove(book)
+            # Remove the book from the database
+            sql_remove_book = "DELETE FROM Books WHERE Book_id = %s"
+            mycursor.execute(sql_remove_book, (book[0],))
+            mydb.commit()
+            print(mycursor.rowcount, "record deleted.")
             # Redraw the canvas to shift books
             redraw_books()
             confirmation_frame.pack_forget()  # Hide the confirmation frame
